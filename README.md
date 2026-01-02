@@ -66,6 +66,3 @@ This portfolio is for demonstration purposes. Feel free to use it as inspiration
 - Improved code maintainability and organization
 - Enhanced documentation
 
----
-
-**Built with ❤️ and lots of ☕**
