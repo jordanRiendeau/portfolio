@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio | Jordan Riendeau</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo">My Portfolio</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Hey, I'm <span class="highlight">Jordan Riendeau</span></h1>
+            <p>This is my website made from scratch, using HTML, CSS, and JavaScript.</p>
+            <div class="cta-buttons">
+                <a href="#projects" class="btn btn-primary">See My Projects</a>
+                <a href="#contact" class="btn btn-secondary">Contact</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card" onclick="window.open('projects/crypto-tracker.html', '_blank')" style="cursor: pointer;">
+                <div class="project-content">
+                    <h3>Crypto Tracker</h3>
+                    <p>Tracks crypto prices with charts. The data is simulated but the chart rendering is real. Learned a lot about canvas while making this.</p>
+                    <div class="project-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Canvas</span>
+                        <span class="tag">Charts</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" onclick="window.open('projects/space-shooter.html', '_blank')" style="cursor: pointer;">
+                <div class="project-content">
+                    <h3>Space Shooter</h3>
+                    <p>Built a simple arcade game using canvas. You shoot aliens, collect power-ups, and try not to die. Got the physics working pretty smooth.</p>
+                    <div class="project-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Canvas</span>
+                        <span class="tag">Game</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" onclick="window.open('projects/task-board.html', '_blank')" style="cursor: pointer;">
+                <div class="project-content">
+                    <h3>Task Board</h3>
+                    <p>Made this to keep track of my own projects. Drag and drop cards between columns, saves everything locally. Nothing fancy but it works.</p>
+                    <div class="project-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Drag & Drop</span>
+                        <span class="tag">LocalStorage</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" onclick="window.open('projects/weather-app.html', '_blank')" style="cursor: pointer;">
+                <div class="project-content">
+                    <h3>Weather App</h3>
+                    <p>Check weather for any city using OpenWeatherMap API. Shows current conditions and 5-day forecast. Good practice with async/await and fetch.</p>
+                    <div class="project-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">API Integration</span>
+                        <span class="tag">Async/Await</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <h2 class="section-title">Technical Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-item">
+                <div class="skill-icon">⚛️</div>
+                <div class="skill-name">React</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">📗</div>
+                <div class="skill-name">Node.js</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🐍</div>
+                <div class="skill-name">Python</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">💾</div>
+                <div class="skill-name">SQL</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🔥</div>
+                <div class="skill-name">Firebase</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">☁️</div>
+                <div class="skill-name">AWS</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🐳</div>
+                <div class="skill-name">Docker</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🎨</div>
+                <div class="skill-name">UI/UX</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <h2 class="section-title">Let's Work Together</h2>
+        <div class="contact-content">
+            <p>I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
+            <a href="mailto:jordan.w.riendeau@gmail.com" class="btn btn-primary">Say Hello</a>
+            <div class="social-links">
+                <a href="https://github.com/yourusername" class="social-link" target="_blank">💻</a>
+                <a href="https://linkedin.com/in/yourusername" class="social-link" target="_blank">💼</a>
+                <a href="https://twitter.com/yourusername" class="social-link" target="_blank">🐦</a>
+                <a href="https://dribbble.com/yourusername" class="social-link" target="_blank">🎨</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Jordan Riendeau. Built with passion and creativity.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

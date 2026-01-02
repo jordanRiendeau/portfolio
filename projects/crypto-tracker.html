@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Tracker</title>
+    <link rel="stylesheet" href="../css/crypto-tracker.css">
+</head>
+<body>
+    <div class="background"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">₿</div>
+                <div class="logo-text">
+                    <h1>Crypto Tracker</h1>
+                    <p>Price charts and market data</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search...">
+                </div>
+                <button class="refresh-btn" onclick="refreshData()">
+                    <span id="refresh-text">Refresh</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">📊 Total Market Cap</div>
+                <div class="stat-value" id="market-cap">$2.45T</div>
+                <div class="stat-change positive" id="market-cap-change">
+                    ↑ 3.24%
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">📈 24h Volume</div>
+                <div class="stat-value" id="volume-24h">$128.5B</div>
+                <div class="stat-change positive" id="volume-change">
+                    ↑ 12.8%
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🪙 Bitcoin Dominance</div>
+                <div class="stat-value" id="btc-dominance">54.2%</div>
+                <div class="stat-change negative" id="btc-dominance-change">
+                    ↓ 0.5%
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🔥 Active Cryptocurrencies</div>
+                <div class="stat-value" id="active-cryptos">12,847</div>
+                <div class="stat-change positive">
+                    ↑ 24 new
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Chart Section -->
+            <div class="chart-section">
+                <div class="chart-header">
+                    <div>
+                        <h3 class="chart-title">Bitcoin (BTC)</h3>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 5px;">
+                            $<span id="current-price">67,842.50</span>
+                            <span class="price-change positive" style="margin-left: 10px;">
+                                ↑ $1,234.50 (1.85%)
+                            </span>
+                        </p>
+                    </div>
+                    <div class="timeframe-buttons">
+                        <button class="timeframe-btn" onclick="changeTimeframe('1H')">1H</button>
+                        <button class="timeframe-btn" onclick="changeTimeframe('24H')">24H</button>
+                        <button class="timeframe-btn active" onclick="changeTimeframe('7D')">7D</button>
+                        <button class="timeframe-btn" onclick="changeTimeframe('30D')">30D</button>
+                        <button class="timeframe-btn" onclick="changeTimeframe('1Y')">1Y</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="price-chart"></canvas>
+                    <div class="chart-tooltip" id="chart-tooltip">
+                        <div class="tooltip-price">$0.00</div>
+                        <div class="tooltip-label">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trending Section -->
+            <div class="trending-section">
+                <h3 class="section-title">🔥 Trending Now</h3>
+                <div class="trending-list" id="trending-list">
+                    <!-- Trending items will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Market Table -->
+        <div class="market-table-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 class="section-title" style="margin: 0;">💰 Market Overview</h3>
+                <div class="table-filters">
+                    <button class="filter-btn active" onclick="filterMarket('all')">All</button>
+                    <button class="filter-btn" onclick="filterMarket('gainers')">🚀 Gainers</button>
+                    <button class="filter-btn" onclick="filterMarket('losers')">📉 Losers</button>
+                    <button class="filter-btn" onclick="filterMarket('volume')">📊 Volume</button>
+                </div>
+            </div>
+            <table id="market-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>24h %</th>
+                        <th>Market Cap</th>
+                        <th>Volume (24h)</th>
+                        <th>Last 7 Days</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="market-tbody">
+                    <!-- Market data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">
+        <span id="toast-message"></span>
+    </div>
+
+    <script src="../js/crypto-tracker.js"></script>
+</body>
+</html>

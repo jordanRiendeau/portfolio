@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Board</title>
+    <link rel="stylesheet" href="../css/task-board.css">
+</head>
+<body>
+    <div class="background-pattern"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">📋</div>
+                <div class="logo-text">
+                    <h1>TaskFlow</h1>
+                    <p>Organize your projects efficiently</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search tasks...">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <button class="btn btn-primary" onclick="openModal()">
+                    ➕ New Task
+                </button>
+                <button class="btn btn-secondary" onclick="clearCompleted()">
+                    🗑️ Clear Done
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-icon todo">📝</div>
+                <div class="stat-info">
+                    <h3 id="todo-count">0</h3>
+                    <p>To Do</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon progress">⚡</div>
+                <div class="stat-info">
+                    <h3 id="progress-count">0</h3>
+                    <p>In Progress</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon done">✅</div>
+                <div class="stat-info">
+                    <h3 id="done-count">0</h3>
+                    <p>Completed</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon total">📊</div>
+                <div class="stat-info">
+                    <h3 id="total-count">0</h3>
+                    <p>Total Tasks</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Board -->
+        <div class="board">
+            <!-- To Do Column -->
+            <div class="column">
+                <div class="column-header">
+                    <div class="column-title">
+                        📝 To Do
+                        <span class="column-count" id="todo-badge">0</span>
+                    </div>
+                    <button class="add-task-btn" onclick="openModal('todo')">+</button>
+                </div>
+                <div class="tasks-container" id="todo-tasks" data-status="todo">
+                    <!-- Tasks will be inserted here -->
+                </div>
+            </div>
+
+            <!-- In Progress Column -->
+            <div class="column">
+                <div class="column-header">
+                    <div class="column-title">
+                        ⚡ In Progress
+                        <span class="column-count" id="progress-badge">0</span>
+                    </div>
+                    <button class="add-task-btn" onclick="openModal('progress')">+</button>
+                </div>
+                <div class="tasks-container" id="progress-tasks" data-status="progress">
+                    <!-- Tasks will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Done Column -->
+            <div class="column">
+                <div class="column-header">
+                    <div class="column-title">
+                        ✅ Done
+                        <span class="column-count" id="done-badge">0</span>
+                    </div>
+                    <button class="add-task-btn" onclick="openModal('done')">+</button>
+                </div>
+                <div class="tasks-container" id="done-tasks" data-status="done">
+                    <!-- Tasks will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="modal" id="task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Create New Task</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="task-form">
+                <div class="form-group">
+                    <label for="task-title">Task Title *</label>
+                    <input type="text" id="task-title" required placeholder="Enter task title...">
+                </div>
+                <div class="form-group">
+                    <label for="task-description">Description</label>
+                    <textarea id="task-description" placeholder="Add task details..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="task-priority">Priority</label>
+                    <select id="task-priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="task-status">Status</label>
+                    <select id="task-status">
+                        <option value="todo">To Do</option>
+                        <option value="progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="task-date">Due Date</label>
+                    <input type="date" id="task-date">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span id="toast-message"></span>
+    </div>
+
+    <script src="../js/task-board.js"></script>
+</body>
+</html>

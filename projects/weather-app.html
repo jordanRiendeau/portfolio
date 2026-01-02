@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="../css/weather-app.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Weather App</h1>
+            <p>Check current weather and 5-day forecast for any city</p>
+        </header>
+
+        <!-- Search -->
+        <div class="search-container">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="cityInput" 
+                    placeholder="Enter city name..."
+                    autocomplete="off"
+                >
+                <button id="searchBtn">Search</button>
+                <div class="suggestions" id="suggestions"></div>
+            </div>
+            <div class="unit-toggle">
+                <button class="unit-btn active" data-unit="metric">°C</button>
+                <button class="unit-btn" data-unit="imperial">°F</button>
+            </div>
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading weather data...</p>
+        </div>
+
+        <!-- Weather Display -->
+        <div class="weather-container" id="weatherContainer">
+            <!-- Current Weather -->
+            <div class="current-weather">
+                <div class="location-info">
+                    <div class="location">
+                        <h2 id="cityName">Loading...</h2>
+                        <p class="date" id="currentDate"></p>
+                    </div>
+                    <div class="weather-icon-main" id="weatherIcon">🌡️</div>
+                </div>
+
+                <div class="weather-main">
+                    <div class="temperature">
+                        <span id="temperature">--</span><span id="tempUnit">°C</span>
+                    </div>
+                    <div class="weather-details">
+                        <div class="weather-description" id="weatherDesc">Loading...</div>
+                        <div class="feels-like">Feels like <span id="feelsLike">--°C</span></div>
+                    </div>
+                </div>
+
+                <div class="weather-stats">
+                    <div class="stat">
+                        <div class="stat-label">Humidity</div>
+                        <div class="stat-value" id="humidity">--%</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Wind Speed</div>
+                        <div class="stat-value" id="windSpeed">-- km/h</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Pressure</div>
+                        <div class="stat-value" id="pressure">-- hPa</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Cloudiness</div>
+                        <div class="stat-value" id="clouds">--%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5-Day Forecast -->
+            <div class="forecast-container">
+                <h3>5-Day Forecast</h3>
+                <div class="forecast-grid" id="forecastGrid">
+                    <!-- Forecast cards will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/weather-app.js"></script>
+</body>
+</html>
