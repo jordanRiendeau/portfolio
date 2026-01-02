@@ -1,103 +1,56 @@
-# Jordan Riendeau's Portfolio
+# Portfolio
 
-Welcome to my professional portfolio showcasing my web development projects and skills.
+My personal portfolio showcasing web development projects.
 
-## 🏗️ Project Structure
+## Projects
+
+### 1. **Space Shooter**
+Arcade-style game with smooth controls and power-ups.
+- **Tech:** JavaScript, Canvas API
+- **Features:** Enemy waves, power-ups (rapid fire, shield, multi-shot), particle effects, progressive difficulty
+
+### 2. **Weather App**
+Real-time weather information for any city worldwide.
+- **Tech:** JavaScript, OpenWeatherMap API, Async/Await
+- **Features:** Current weather conditions, 5-day forecast, Celsius/Fahrenheit toggle, city autocomplete
+
+### 3. **Crypto Tracker**
+Cryptocurrency price tracker with interactive charts.
+- **Tech:** JavaScript, Canvas API
+- **Features:** Price charts, market data simulation, sparklines, filtering
+
+### 4. **Task Board**
+Kanban-style task management board.
+- **Tech:** JavaScript, Drag & Drop API, LocalStorage
+- **Features:** Drag and drop tasks, priority levels, search, local persistence
+
+## Tech Stack
+
+- HTML5, CSS3, JavaScript (ES6+)
+- Canvas API
+- Fetch API / Async-Await
+- LocalStorage
+- Drag and Drop API
+
+## Setup
+
+1. Clone the repository
+2. Open `index.html` in a browser
+3. For the weather app: Get a free API key from [OpenWeatherMap](https://openweathermap.org/api) and add it to `js/weather-app.js`
+
+## Structure
 
 ```
 portfolio/
-├── index.html              # Main portfolio homepage
-├── css/                    # Stylesheets
-│   ├── main.css           # Homepage styles
-│   ├── task-board.css     # Task board project styles
-│   ├── ai-chat.css        # AI chat assistant styles
-│   └── crypto-tracker.css # Crypto tracker styles
-├── js/                     # JavaScript files
-│   ├── main.js            # Homepage scripts
-│   ├── task-board.js      # Task board functionality
-│   ├── ai-chat.js         # AI chat assistant logic
-│   └── crypto-tracker.js  # Crypto tracker features
-├── projects/               # Individual project pages
-│   ├── task-board.html    # TaskFlow Management Board
-│   ├── ai-chat.html       # AI Chat Assistant
-│   └── crypto-tracker.html # Crypto Market Tracker
-└── assets/                 # Images and other assets
+├── index.html              # Homepage
+├── css/                    # Styles for each project
+├── js/                     # JavaScript for each project
+└── projects/               # Individual project pages
 ```
 
-## 🚀 Featured Projects
+## Live Demo
 
-### 1. **CryptoTracker** 
-Real-time cryptocurrency market tracker with interactive charts, live price updates, and market analytics.
-- **Tech Stack:** JavaScript, Canvas API, Real-time Data Visualization
-- **Features:** Live price charts, market filtering, trending cryptocurrencies, sparkline graphs
-
-### 2. **AI Chat Assistant**
-Intelligent conversational AI with code generation, debugging assistance, and real-time responses.
-- **Tech Stack:** JavaScript, AI/ML, NLP concepts
-- **Features:** Code generation, debugging help, export chat history, theme switching
-
-### 3. **TaskFlow Management Board**
-Kanban-style project management board with drag-and-drop functionality and task tracking.
-- **Tech Stack:** JavaScript, Drag & Drop API, Local Storage
-- **Features:** Drag and drop tasks, priority levels, search functionality, local persistence
-
-## 🎨 Design Philosophy
-
-- **Modern UI/UX:** Clean, professional interfaces with smooth animations
-- **Responsive Design:** Fully responsive across all device sizes
-- **Performance Optimized:** Fast loading times and smooth interactions
-- **Accessibility:** Semantic HTML and keyboard navigation support
-
-## 💻 Technologies Used
-
-- HTML5
-- CSS3 (Custom Properties, Flexbox, Grid)
-- Vanilla JavaScript (ES6+)
-- Canvas API for graphics
-- Local Storage API
-- Drag and Drop API
-
-## 🛠️ Setup Instructions
-
-1. **Clone or download** this repository
-2. **Open `index.html`** in your web browser
-3. **Navigate** to individual projects from the homepage
-4. No build process required - pure HTML/CSS/JS!
-
-## 📱 Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## 📂 File Organization
-
-### CSS Files
-Each CSS file contains modular, organized styles specific to its project:
-- CSS variables for consistent theming
-- Mobile-responsive media queries
-- Smooth transitions and animations
-
-### JavaScript Files
-Clean, well-commented JavaScript with:
-- Modern ES6+ syntax
-- Modular function organization
-- Event-driven architecture
-- No external dependencies
-
-## 🎯 Key Features
-
-- ✨ **Particle animations** on homepage
-- 🎨 **Gradient backgrounds** with modern design
-- 📊 **Interactive data visualizations**
-- 💾 **Data persistence** with localStorage
-- 🔄 **Real-time updates** and animations
-- 🌙 **Theme customization options**
-
-## 📧 Contact
-
-**Jordan Riendeau**
+Open `index.html` to view the portfolio homepage.
 - Email: jordan.w.riendeau@gmail.com
 - GitHub: [Your GitHub Profile]
 - LinkedIn: [Your LinkedIn Profile]
