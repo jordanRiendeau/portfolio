@@ -51,9 +51,8 @@ portfolio/
 ## Live Demo
 
 Open `index.html` to view the portfolio homepage.
-- Email: jordan.w.riendeau@gmail.com
-- GitHub: [Your GitHub Profile]
-- LinkedIn: [Your LinkedIn Profile]
+- You will see a scrollable website where there are links and icons to click on, that will directly
+bring you to the given location or path
 
 ## 📝 License
 
