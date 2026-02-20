@@ -183,6 +183,12 @@
   margin-bottom: 6px;
 }
 
+.jt__card-company {
+  font-size: 13px;
+  color: var(--jt-ink-soft);
+  margin-bottom: 4px;
+}
+
 .jt__meta {
   display: flex;
   gap: 8px;

@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap");
+
+.project-shell__bar {
+  font-family: "Sora", "Segoe UI", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(1200px, 92vw);
+  margin: 28px auto 24px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: rgba(12, 17, 23, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  color: #e6edf3;
+}
+
+.project-shell__title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.project-shell__meta {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(230, 237, 243, 0.6);
+}
+
+.project-shell__back {
+  color: #f0b85e;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid rgba(240, 184, 94, 0.35);
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.project-shell__back:hover {
+  background: rgba(240, 184, 94, 0.12);
+  border-color: rgba(240, 184, 94, 0.6);
+}
+
+@media (max-width: 720px) {
+  .project-shell__bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .project-shell__meta {
+    order: 3;
+  }
+}

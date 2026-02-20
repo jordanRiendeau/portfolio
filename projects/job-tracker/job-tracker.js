@@ -41,6 +41,7 @@
     var formEl = rootEl.querySelector("[data-role='form']");
     var modalTitleEl = rootEl.querySelector("[data-role='modal-title']");
     var jobInput = rootEl.querySelector("[data-role='job']");
+    var companyInput = rootEl.querySelector("[data-role='company']");
     var statusInput = rootEl.querySelector("[data-role='status']");
     var payInput = rootEl.querySelector("[data-role='pay']");
 
@@ -77,13 +78,19 @@
     formEl.addEventListener("submit", function (event) {
       event.preventDefault();
       var jobValue = jobInput.value.trim();
+      var companyValue = companyInput.value.trim();
       if (!jobValue) {
         jobInput.focus();
+        return;
+      }
+      if (!companyValue) {
+        companyInput.focus();
         return;
       }
 
       var payload = {
         job: jobValue,
+        company: companyValue,
         status: statusInput.value,
         pay: payInput.value.trim()
       };
@@ -94,6 +101,7 @@
         });
         if (existing) {
           existing.job = payload.job;
+          existing.company = payload.company;
           existing.status = payload.status;
           existing.pay = payload.pay;
         }
@@ -101,6 +109,7 @@
         state.jobs.unshift({
           id: "job-" + Date.now().toString(36),
           job: payload.job,
+          company: payload.company,
           status: payload.status,
           pay: payload.pay,
           createdAt: Date.now()
@@ -150,6 +159,7 @@
         state.editingId = job.id;
         modalTitleEl.textContent = "Edit entry";
         jobInput.value = job.job;
+        companyInput.value = job.company || "";
         statusInput.value = job.status;
         payInput.value = job.pay || "";
       } else {
@@ -182,7 +192,15 @@
         }
 
         var haystack =
-          (item.job + " " + item.status + " " + (item.pay || ""))
+          (
+            item.job +
+            " " +
+            (item.company || "") +
+            " " +
+            item.status +
+            " " +
+            (item.pay || "")
+          )
             .toLowerCase()
             .trim();
         return haystack.indexOf(state.searchQuery) !== -1;
@@ -205,12 +223,13 @@
         return state.jobs.slice();
       },
       addJob: function (job) {
-        if (!job || !job.job) {
+        if (!job || !job.job || !job.company) {
           return;
         }
         state.jobs.unshift({
           id: "job-" + Date.now().toString(36),
           job: job.job,
+          company: job.company,
           status: job.status || config.statuses[0].value,
           pay: job.pay || "",
           createdAt: Date.now()
@@ -254,7 +273,7 @@
       "  <div class='jt__toolbar'>" +
       "    <label class='jt__field'>" +
       "      <span class='jt__label'>Search</span>" +
-      "      <input class='jt__input' data-role='search' type='search' placeholder='Role, status, or pay' />" +
+      "      <input class='jt__input' data-role='search' type='search' placeholder='Role, company, status, or pay' />" +
       "    </label>" +
       "    <label class='jt__field'>" +
       "      <span class='jt__label'>Status</span>" +
@@ -280,6 +299,10 @@
       "      <label class='jt__field'>" +
       "        <span class='jt__label'>Job</span>" +
       "        <input class='jt__input' data-role='job' type='text' placeholder='Role or title' required />" +
+      "      </label>" +
+      "      <label class='jt__field'>" +
+      "        <span class='jt__label'>Company</span>" +
+      "        <input class='jt__input' data-role='company' type='text' placeholder='Company name' required />" +
       "      </label>" +
       "      <label class='jt__field'>" +
       "        <span class='jt__label'>Status</span>" +
@@ -319,6 +342,9 @@
       "  <div>" +
       "    <p class='jt__card-title'>" +
       escapeHtml(job.job) +
+      "    </p>" +
+      "    <p class='jt__card-company'>" +
+      escapeHtml(job.company || "Company not set") +
       "    </p>" +
       "    <div class='jt__meta'>" +
       "      <span class='" +
