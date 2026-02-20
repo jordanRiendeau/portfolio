@@ -4,25 +4,20 @@ My personal portfolio showcasing web development projects.
 
 ## Projects
 
-### 1. **Space Shooter**
+### 1. **Job Tracker**
+Track your jobs easier and more efficiently
+
+### 2. **Space Shooter**
 Arcade-style game with smooth controls and power-ups.
-- **Tech:** JavaScript, Canvas API
-- **Features:** Enemy waves, power-ups (rapid fire, shield, multi-shot), particle effects, progressive difficulty
 
-### 2. **Weather App**
+### 3. **Weather App**
 Real-time weather information for any city worldwide.
-- **Tech:** JavaScript, OpenWeatherMap API, Async/Await
-- **Features:** Current weather conditions, 5-day forecast, Celsius/Fahrenheit toggle, city autocomplete
 
-### 3. **Crypto Tracker**
+### 4. **Crypto Tracker**
 Cryptocurrency price tracker with interactive charts.
-- **Tech:** JavaScript, Canvas API
-- **Features:** Price charts, market data simulation, sparklines, filtering
 
-### 4. **Task Board**
+### 5. **Task Board**
 Kanban-style task management board.
-- **Tech:** JavaScript, Drag & Drop API, LocalStorage
-- **Features:** Drag and drop tasks, priority levels, search, local persistence
 
 ## Tech Stack
 
@@ -31,22 +26,6 @@ Kanban-style task management board.
 - Fetch API / Async-Await
 - LocalStorage
 - Drag and Drop API
-
-## Setup
-
-1. Clone the repository
-2. Open `index.html` in a browser
-3. For the weather app: Get a free API key from [OpenWeatherMap](https://openweathermap.org/api) and add it to `js/weather-app.js`
-
-## Structure
-
-```
-portfolio/
-├── index.html              # Homepage
-├── css/                    # Styles for each project
-├── js/                     # JavaScript for each project
-└── projects/               # Individual project pages
-```
 
 ## Live Demo
 
@@ -58,10 +37,4 @@ bring you to the given location or path
 
 This portfolio is for demonstration purposes. Feel free to use it as inspiration for your own projects!
 
-## 🔄 Recent Updates
-
-- **January 2025**: Reorganized project structure into professional folder hierarchy
-- Separated CSS and JavaScript into individual files
-- Improved code maintainability and organization
-- Enhanced documentation
 
