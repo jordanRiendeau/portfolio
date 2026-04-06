@@ -1,64 +1,273 @@
 // Cryptocurrency data
-        const cryptoData = [
-            { rank: 1, name: 'Bitcoin', symbol: 'BTC', icon: '₿', price: 67842.50, change: 1.85, marketCap: 1.32, volume: 45.2, trend: [65000, 66000, 65500, 67000, 66500, 67500, 67842] },
-            { rank: 2, name: 'Ethereum', symbol: 'ETH', icon: 'Ξ', price: 3456.78, change: 2.34, marketCap: 415.3, volume: 28.7, trend: [3300, 3350, 3400, 3420, 3380, 3450, 3456] },
-            { rank: 3, name: 'Tether', symbol: 'USDT', icon: '₮', price: 1.00, change: -0.01, marketCap: 95.8, volume: 82.1, trend: [1.00, 1.00, 0.99, 1.00, 1.00, 1.00, 1.00] },
-            { rank: 4, name: 'BNB', symbol: 'BNB', icon: '🔶', price: 612.45, change: 3.67, marketCap: 94.2, volume: 3.8, trend: [580, 590, 595, 600, 605, 610, 612] },
-            { rank: 5, name: 'Solana', symbol: 'SOL', icon: '◎', price: 178.92, change: 8.45, marketCap: 78.5, volume: 6.2, trend: [160, 165, 168, 172, 175, 177, 178] },
-            { rank: 6, name: 'XRP', symbol: 'XRP', icon: '✕', price: 0.6234, change: -1.23, marketCap: 34.1, volume: 2.1, trend: [0.65, 0.64, 0.63, 0.62, 0.63, 0.62, 0.623] },
-            { rank: 7, name: 'Cardano', symbol: 'ADA', icon: '₳', price: 0.5821, change: 4.21, marketCap: 20.4, volume: 1.8, trend: [0.55, 0.56, 0.57, 0.575, 0.58, 0.581, 0.582] },
-            { rank: 8, name: 'Dogecoin', symbol: 'DOGE', icon: 'Ð', price: 0.1245, change: -2.87, marketCap: 18.2, volume: 2.4, trend: [0.13, 0.128, 0.127, 0.126, 0.125, 0.125, 0.124] },
-            { rank: 9, name: 'Polygon', symbol: 'MATIC', icon: '⬡', price: 0.8934, change: 5.67, marketCap: 8.3, volume: 0.9, trend: [0.82, 0.84, 0.86, 0.87, 0.88, 0.89, 0.893] },
-            { rank: 10, name: 'Avalanche', symbol: 'AVAX', icon: '🔺', price: 42.18, change: 6.32, marketCap: 15.6, volume: 1.2, trend: [38, 39, 40, 41, 41.5, 42, 42.18] }
-        ];
+const COIN_CONFIG = [
+    { id: 'bitcoin', name: 'Bitcoin', symbol: 'BTC', icon: '₿' },
+    { id: 'ethereum', name: 'Ethereum', symbol: 'ETH', icon: 'Ξ' },
+    { id: 'tether', name: 'Tether', symbol: 'USDT', icon: '₮' },
+    { id: 'binancecoin', name: 'BNB', symbol: 'BNB', icon: '🔶' },
+    { id: 'solana', name: 'Solana', symbol: 'SOL', icon: '◎' },
+    { id: 'ripple', name: 'XRP', symbol: 'XRP', icon: '✕' },
+    { id: 'cardano', name: 'Cardano', symbol: 'ADA', icon: '₳' },
+    { id: 'dogecoin', name: 'Dogecoin', symbol: 'DOGE', icon: 'Ð' },
+    { id: 'polygon', name: 'Polygon', symbol: 'MATIC', icon: '⬡' },
+    { id: 'avalanche-2', name: 'Avalanche', symbol: 'AVAX', icon: '🔺' }
+];
 
-        let currentFilter = 'all';
-        let chart = null;
-        let currentTimeframe = '7D';
-        let currentCrypto = cryptoData[0]; // Default to Bitcoin
-        let chartData = [];
-        let chartLabels = [];
-        let hoverIndex = -1;
+const COIN_MAP = new Map(COIN_CONFIG.map(coin => [coin.id, coin]));
+const SYMBOL_TO_ID = new Map(COIN_CONFIG.map(coin => [coin.symbol, coin.id]));
 
-        // Generate data for different timeframes
-        function generateTimeframeData(timeframe, basePrice) {
-            let dataPoints;
-            let baseValue = basePrice;
-            
-            switch(timeframe) {
-                case '1H':
-                    dataPoints = 12; // 5-minute intervals
-                    break;
-                case '24H':
-                    dataPoints = 24; // hourly
-                    break;
-                case '7D':
-                    dataPoints = 7; // daily
-                    break;
-                case '30D':
-                    dataPoints = 30; // daily
-                    break;
-                case '1Y':
-                    dataPoints = 12; // monthly
-                    break;
-            }
-            
-            const data = [];
-            for (let i = 0; i < dataPoints; i++) {
-                const variation = (Math.random() - 0.5) * baseValue * 0.05;
-                baseValue += variation;
-                data.push(baseValue);
-            }
-            return data;
+const API_BASE = 'https://api.coingecko.com/api/v3';
+const LIVE_POLL_INTERVAL_MS = 30000;
+
+let cryptoData = COIN_CONFIG.map((coin, index) => ({
+    rank: index + 1,
+    name: coin.name,
+    symbol: coin.symbol,
+    icon: coin.icon,
+    price: 0,
+    change: 0,
+    marketCap: 0,
+    volume: 0,
+    trend: [0, 0, 0, 0, 0, 0, 0],
+    coinId: coin.id
+}));
+
+let currentFilter = 'all';
+let currentTimeframe = '7D';
+let currentCrypto = cryptoData[0];
+let chartData = [];
+let chartLabels = [];
+let hoverIndex = -1;
+let pollTimer = null;
+let isFetching = false;
+
+function formatMarketBillions(value) {
+    return (value / 1_000_000_000).toFixed(1);
+}
+
+function formatCryptoPrice(value) {
+    if (value >= 1000) {
+        return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    if (value >= 1) {
+        return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+    }
+    return value.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 });
+}
+
+function getLabelFormatter(timeframe) {
+    switch (timeframe) {
+        case '1H':
+            return new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        case '24H':
+            return new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        case '7D':
+            return new Intl.DateTimeFormat('en-US', { weekday: 'short' });
+        case '30D':
+            return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
+        case '1Y':
+            return new Intl.DateTimeFormat('en-US', { month: 'short' });
+        default:
+            return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
+    }
+}
+
+function downSamplePoints(points, targetCount) {
+    if (!Array.isArray(points) || points.length <= targetCount) {
+        return points || [];
+    }
+
+    const sampled = [];
+    const step = (points.length - 1) / (targetCount - 1);
+    for (let i = 0; i < targetCount; i++) {
+        sampled.push(points[Math.round(i * step)]);
+    }
+    return sampled;
+}
+
+function getTargetPointCount(timeframe) {
+    switch (timeframe) {
+        case '1H':
+            return 12;
+        case '24H':
+            return 24;
+        case '7D':
+            return 7;
+        case '30D':
+            return 30;
+        case '1Y':
+            return 12;
+        default:
+            return 30;
+    }
+}
+
+function updateChartHeader(crypto) {
+    if (!crypto) return;
+
+    document.querySelector('.chart-title').textContent = `${crypto.name} (${crypto.symbol})`;
+    document.getElementById('current-price').textContent = formatCryptoPrice(crypto.price);
+
+    const priceChangeEl = document.querySelector('.chart-header .price-change');
+    const changeAmount = (crypto.price * crypto.change) / 100;
+    priceChangeEl.className = `price-change ${crypto.change >= 0 ? 'positive' : 'negative'}`;
+    priceChangeEl.innerHTML = `${crypto.change >= 0 ? '↑' : '↓'} $${Math.abs(changeAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${Math.abs(crypto.change).toFixed(2)}%)`;
+}
+
+async function fetchGlobalStats() {
+    try {
+        const response = await fetch(`${API_BASE}/global`, { cache: 'no-store' });
+        if (!response.ok) {
+            throw new Error(`Global API failed with status ${response.status}`);
         }
 
-        // Initialize
-        window.addEventListener('load', () => {
-            renderMarketTable();
-            renderTrendingList();
-            initChart();
-            startLiveUpdates();
-        });
+        const payload = await response.json();
+        const data = payload.data;
+
+        document.getElementById('market-cap').textContent = `$${(data.total_market_cap.usd / 1_000_000_000_000).toFixed(2)}T`;
+        document.getElementById('volume-24h').textContent = `$${(data.total_volume.usd / 1_000_000_000).toFixed(1)}B`;
+        document.getElementById('btc-dominance').textContent = `${data.market_cap_percentage.btc.toFixed(1)}%`;
+        document.getElementById('active-cryptos').textContent = data.active_cryptocurrencies.toLocaleString('en-US');
+
+        const marketCapChange = Number.isFinite(data.market_cap_change_percentage_24h_usd)
+            ? data.market_cap_change_percentage_24h_usd
+            : 0;
+        const marketCapChangeEl = document.getElementById('market-cap-change');
+        marketCapChangeEl.className = `stat-change ${marketCapChange >= 0 ? 'positive' : 'negative'}`;
+        marketCapChangeEl.textContent = `${marketCapChange >= 0 ? '↑' : '↓'} ${Math.abs(marketCapChange).toFixed(2)}%`;
+    } catch (error) {
+        console.error('Failed to fetch global market stats:', error);
+    }
+}
+
+async function fetchMarketSnapshot() {
+    const ids = COIN_CONFIG.map(c => c.id).join(',');
+    const url = `${API_BASE}/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc&sparkline=true&price_change_percentage=24h`;
+    const response = await fetch(url, { cache: 'no-store' });
+
+    if (!response.ok) {
+        throw new Error(`Market API failed with status ${response.status}`);
+    }
+
+    const coins = await response.json();
+
+    cryptoData = coins.map((coin, index) => {
+        const config = COIN_MAP.get(coin.id);
+        return {
+            rank: coin.market_cap_rank || index + 1,
+            name: config?.name || coin.name,
+            symbol: (config?.symbol || coin.symbol || '').toUpperCase(),
+            icon: config?.icon || '◈',
+            price: coin.current_price || 0,
+            change: coin.price_change_percentage_24h || 0,
+            marketCap: coin.market_cap || 0,
+            volume: coin.total_volume || 0,
+            trend: downSamplePoints(coin.sparkline_in_7d?.price || [], 7),
+            coinId: coin.id
+        };
+    });
+
+    const selectedId = currentCrypto?.coinId;
+    currentCrypto = cryptoData.find(c => c.coinId === selectedId) || cryptoData[0];
+}
+
+async function fetchChartData(coinId, timeframe) {
+    const formatter = getLabelFormatter(timeframe);
+    const now = Math.floor(Date.now() / 1000);
+    let prices = [];
+
+    if (timeframe === '1H') {
+        const from = now - 60 * 60;
+        const response = await fetch(
+            `${API_BASE}/coins/${coinId}/market_chart/range?vs_currency=usd&from=${from}&to=${now}`,
+            { cache: 'no-store' }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Range chart API failed with status ${response.status}`);
+        }
+
+        const payload = await response.json();
+        prices = payload.prices || [];
+    } else {
+        const days = timeframe === '24H' ? 1 : timeframe === '7D' ? 7 : timeframe === '30D' ? 30 : 365;
+        const interval = timeframe === '24H' ? 'hourly' : 'daily';
+        const response = await fetch(
+            `${API_BASE}/coins/${coinId}/market_chart?vs_currency=usd&days=${days}&interval=${interval}`,
+            { cache: 'no-store' }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Chart API failed with status ${response.status}`);
+        }
+
+        const payload = await response.json();
+        prices = payload.prices || [];
+    }
+
+    const sampled = downSamplePoints(prices, getTargetPointCount(timeframe));
+    chartData = sampled.map(point => point[1]);
+    chartLabels = sampled.map(point => formatter.format(new Date(point[0])));
+}
+
+async function refreshAllData(showSuccessToast = false) {
+    if (isFetching) {
+        return;
+    }
+
+    isFetching = true;
+    try {
+        await Promise.all([fetchMarketSnapshot(), fetchGlobalStats()]);
+        renderMarketTable();
+        renderTrendingList();
+        updateChartHeader(currentCrypto);
+        await refreshChartForCurrentSelection();
+
+        if (showSuccessToast) {
+            showToast('Live prices updated');
+        }
+    } catch (error) {
+        console.error('Failed to refresh crypto data:', error);
+        showToast('Unable to fetch live prices right now');
+    } finally {
+        isFetching = false;
+    }
+}
+
+async function refreshChartForCurrentSelection() {
+    if (!currentCrypto) return;
+
+    const canvas = document.getElementById('price-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    try {
+        await fetchChartData(currentCrypto.coinId, currentTimeframe);
+    } catch (error) {
+        console.error('Failed to fetch chart data:', error);
+        if (currentTimeframe === '7D' && currentCrypto.trend?.length) {
+            chartData = currentCrypto.trend;
+            chartLabels = getChartLabels(currentTimeframe, chartData.length);
+        }
+    }
+
+    if (!chartData.length) {
+        chartData = currentCrypto.trend || [currentCrypto.price];
+        chartLabels = getChartLabels(currentTimeframe, chartData.length);
+    }
+
+    drawChart(ctx, canvas.width, canvas.height, chartData, currentTimeframe);
+}
+
+async function initializeApp() {
+    initChart();
+    renderMarketTable();
+    renderTrendingList();
+    await refreshAllData(false);
+    startLiveUpdates();
+}
+
+// Initialize
+window.addEventListener('load', initializeApp);
 
         // Render Market Table
         function renderMarketTable() {
@@ -88,14 +297,14 @@
                             </div>
                         </div>
                     </td>
-                    <td>$${crypto.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td>$${formatCryptoPrice(crypto.price)}</td>
                     <td>
                         <span class="price-change ${crypto.change > 0 ? 'positive' : 'negative'}">
                             ${crypto.change > 0 ? '↑' : '↓'} ${Math.abs(crypto.change).toFixed(2)}%
                         </span>
                     </td>
-                    <td>$${crypto.marketCap.toFixed(1)}B</td>
-                    <td>$${crypto.volume.toFixed(1)}B</td>
+                    <td>$${formatMarketBillions(crypto.marketCap)}B</td>
+                    <td>$${formatMarketBillions(crypto.volume)}B</td>
                     <td>
                         <canvas class="sparkline" id="spark-${crypto.symbol}" width="100" height="40"></canvas>
                     </td>
@@ -133,7 +342,7 @@
                         </div>
                     </div>
                     <div class="trending-price">
-                        <div class="price">$${crypto.price.toLocaleString()}</div>
+                        <div class="price">$${formatCryptoPrice(crypto.price)}</div>
                         <div class="price-change ${crypto.change > 0 ? 'positive' : 'negative'}">
                             ${crypto.change > 0 ? '↑' : '↓'} ${Math.abs(crypto.change).toFixed(2)}%
                         </div>
@@ -150,7 +359,7 @@
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
 
-            chartData = generateTimeframeData(currentTimeframe, currentCrypto.price);
+            chartData = currentCrypto.trend.length ? currentCrypto.trend : [currentCrypto.price];
             chartLabels = getChartLabels(currentTimeframe, chartData.length);
             drawChart(ctx, canvas.width, canvas.height, chartData, currentTimeframe);
             
@@ -219,7 +428,7 @@
 
             const min = Math.min(...data);
             const max = Math.max(...data);
-            const range = max - min;
+            const range = max - min || 1;
 
             // Draw grid lines and Y-axis labels
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
@@ -341,7 +550,9 @@
             ctx.font = '12px Inter';
             ctx.textAlign = 'center';
             
-            const labels = getChartLabels(timeframe, data.length);
+            const labels = chartLabels.length === data.length
+                ? chartLabels
+                : getChartLabels(timeframe, data.length);
             const labelStep = Math.ceil(labels.length / 7); // Show max 7 labels
             labels.forEach((label, index) => {
                 if (index % labelStep === 0 || index === labels.length - 1) {
@@ -382,7 +593,7 @@
 
             const min = Math.min(...data);
             const max = Math.max(...data);
-            const range = max - min;
+            const range = max - min || 1;
 
             ctx.beginPath();
             ctx.strokeStyle = isPositive ? '#00ff88' : '#ff4757';
@@ -417,7 +628,7 @@
         }
 
         // Change Timeframe
-        function changeTimeframe(timeframe) {
+        async function changeTimeframe(timeframe) {
             currentTimeframe = timeframe;
             hoverIndex = -1; // Reset hover
             
@@ -426,41 +637,21 @@
             });
             event.target.classList.add('active');
             
-            // Redraw chart with new timeframe for current crypto
-            const canvas = document.getElementById('price-chart');
-            const ctx = canvas.getContext('2d');
-            chartData = generateTimeframeData(timeframe, currentCrypto.price);
-            chartLabels = getChartLabels(timeframe, chartData.length);
-            drawChart(ctx, canvas.width, canvas.height, chartData, timeframe);
+            await refreshChartForCurrentSelection();
             
             showToast(`Switched to ${timeframe} timeframe`);
         }
 
         // Select Crypto
-        function selectCrypto(symbol) {
+        async function selectCrypto(symbol) {
             const crypto = cryptoData.find(c => c.symbol === symbol);
             if (!crypto) return;
             
             currentCrypto = crypto;
             hoverIndex = -1; // Reset hover
-            
-            // Update chart title and price
-            document.querySelector('.chart-title').textContent = `${crypto.name} (${crypto.symbol})`;
-            document.getElementById('current-price').textContent = 
-                crypto.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            
-            // Update price change indicator
-            const priceChangeEl = document.querySelector('.chart-header .price-change');
-            const changeAmount = (crypto.price * crypto.change / 100).toFixed(2);
-            priceChangeEl.className = `price-change ${crypto.change > 0 ? 'positive' : 'negative'}`;
-            priceChangeEl.innerHTML = `${crypto.change > 0 ? '↑' : '↓'} $${Math.abs(changeAmount)} (${Math.abs(crypto.change).toFixed(2)}%)`;
-            
-            // Redraw chart with selected crypto
-            const canvas = document.getElementById('price-chart');
-            const ctx = canvas.getContext('2d');
-            chartData = generateTimeframeData(currentTimeframe, crypto.price);
-            chartLabels = getChartLabels(currentTimeframe, chartData.length);
-            drawChart(ctx, canvas.width, canvas.height, chartData, currentTimeframe);
+
+            updateChartHeader(crypto);
+            await refreshChartForCurrentSelection();
             
             showToast(`Now viewing ${crypto.name} (${symbol})`);
         }
@@ -471,43 +662,23 @@
         }
 
         // Refresh Data
-        function refreshData() {
+        async function refreshData() {
             const btn = document.getElementById('refresh-text');
             btn.innerHTML = '<span class="loading"></span>';
-            
-            setTimeout(() => {
-                // Simulate price updates with more realistic changes
-                cryptoData.forEach(crypto => {
-                    const change = (Math.random() - 0.5) * 5; // -2.5% to +2.5%
-                    crypto.price *= (1 + change / 100);
-                    // Update change but keep it realistic
-                    crypto.change += change * 0.3; // Gradual change
-                    // Keep change within reasonable bounds
-                    crypto.change = Math.max(-15, Math.min(15, crypto.change));
-                });
-                
-                renderMarketTable();
-                renderTrendingList();
-                btn.innerHTML = '🔄 Refresh';
-                showToast('Data refreshed successfully! 🎉');
-            }, 1000);
+
+            await refreshAllData(true);
+            btn.textContent = 'Refresh';
         }
 
         // Live Updates
         function startLiveUpdates() {
-            setInterval(() => {
-                // Simulate small price changes
-                cryptoData.forEach(crypto => {
-                    const change = (Math.random() - 0.5) * 0.5;
-                    crypto.price *= (1 + change / 100);
-                });
-                
-                // Update current price display for the currently viewed crypto
-                if (currentCrypto) {
-                    document.getElementById('current-price').textContent = 
-                        currentCrypto.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                }
-            }, 3000);
+            if (pollTimer) {
+                clearInterval(pollTimer);
+            }
+
+            pollTimer = setInterval(() => {
+                refreshAllData(false);
+            }, LIVE_POLL_INTERVAL_MS);
         }
 
         // Search Functionality
